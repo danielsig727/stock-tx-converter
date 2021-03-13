@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from tx_converter.firstrade_cfm import FirstradeCfm
 from typing import Optional
 import datetime
 
@@ -49,4 +50,21 @@ def from_tda_sg_trade_cfm(tx: TDASgTradeCfm) -> Optional[StocksCafeTransaction]:
         date=tx.date.strftime("%Y-%m-%d"),
         amount_after_fee=tx.net_amt,
         notes=f"converted from tda_sg_trade_cfm ({datetime.datetime.now().isoformat(timespec='seconds')})",
+    )
+
+
+def from_firstrade_cfm(tx: FirstradeCfm) -> Optional[StocksCafeTransaction]:
+    if tx.op not in ("Buy", "Sell"):
+        return None
+
+    return StocksCafeTransaction(
+        op=tx.op,
+        exchange_code="USX",
+        symbol=tx.symbol,
+        qty=tx.qty,
+        currency="USD",
+        price=tx.price,
+        date=tx.date.strftime("%Y-%m-%d"),
+        amount_after_fee=tx.amount,
+        notes=f"converted from firstrade_cfm ({datetime.datetime.now().isoformat(timespec='seconds')})",
     )
