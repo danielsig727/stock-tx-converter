@@ -13,7 +13,7 @@ class StocksCafeTransaction:
     symbol: str  # Symbol
     qty: int  # Units Purchased or Sold
     currency: str
-    amount: float  # Price Paid or Received (based on the currency this stock trades in)
+    price: float  # Price Paid or Received (based on the currency this stock trades in)
     date: str  # Date of transaction (YYYY-MM-DD or MM/DD/YYY)
     amount_after_fee: Optional[
         float
@@ -31,9 +31,9 @@ def from_tda_stmt_tx(tx: TDAStmtTransaction) -> Optional[StocksCafeTransaction]:
         symbol=tx.symbol_cusip,
         qty=tx.qty,
         currency="USD",
-        amount=tx.amount,
+        price=tx.price,
         date=tx.trade_date.strftime("%Y-%m-%d"),
-        amount_after_fee=None,
+        amount_after_fee=tx.amount,
         notes="",
     )
 
@@ -45,7 +45,7 @@ def from_tda_sg_trade_cfm(tx: TDASgTradeCfm) -> Optional[StocksCafeTransaction]:
         symbol=tx.symbol,
         qty=tx.qty,
         currency="USD",
-        amount=tx.principal,
+        price=tx.price,
         date=tx.date.strftime("%Y-%m-%d"),
         amount_after_fee=tx.net_amt,
         notes=f"converted from tda_sg_trade_cfm ({datetime.datetime.now().isoformat(timespec='seconds')})",
