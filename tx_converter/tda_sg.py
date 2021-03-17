@@ -45,7 +45,7 @@ def _load_trade_cfm(line: str) -> Optional[TDASgTradeCfm]:
         tx_id=tokens[1],
         symbol=tokens[2],
         qty=int(tokens[3]),
-        op="Buy" if tokens[4] == "Bought" else "Sold",
+        op="Buy" if tokens[4] == "Bought" else "Sell",
         commission=float(tokens[5]),
         price=float(tokens[6]),
         principal=float(tokens[7]),
